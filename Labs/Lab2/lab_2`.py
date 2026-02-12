@@ -99,21 +99,20 @@ class ForwardKinematics(Node):
 
         # T_1_2 (leg_front_l_1 to leg_front_l_2)
         ## TODO: Implement the transformation matrix from leg_front_l_1 to leg_front_l_2
-        T_1_2 = self.translation(0.05, 0, 0) 
-        print(T_1_2)
+        T_1_2 = self.translation(0.05, 0, 0)@self.rotation_y(theta1) 
+
         # T_2_3 (leg_front_l_2 to leg_front_l_3)
         ## TODO: Implement the transformation matrix from leg_front_l_2 to leg_front_l_3
-        T_2_3 = self.translation(0, 0, -0.08)
-        print(T_2_3)
+        T_2_3 = self.translation(0, 0, -0.08)@self.rotation_z(theta2)
         # T_3_ee (leg_front_l_3 to end-effector)
         ## TODO: Implement the transformation matrix from leg_front_l_3 to end effector
-        T_3_ee = self.translation(0, 0, -0.1)
+        T_3_ee = self.translation(0, 0, -0.1)@self.rotation_y(theta3)
         # TODO: Compute the final transformation. T_0_ee is the multiplication of the previous transformation matrices
-        T_0_ee =T_3_ee@T_2_3@T_1_2@T_0_1
-        print(T_0_ee)
+        T_0_ee = T_3_ee@T_2_3@T_1_2@T_0_1
+        #print(T_0_ee)
         # TODO: Extract the end-effector position. The end effector position is a 3x1 vector (not in homogenous coordinates)
         end_effector_position = T_0_ee[:3,3]
-        #print(end_effector_position)
+        print(end_effector_position)
 
         return end_effector_position
 
