@@ -90,40 +90,51 @@ class ForwardKinematics(Node):
 
     # FK for forward left leg
     def forward_kinematics_f(self, theta1, theta2, theta3):
-        theta1=0
-        theta2=0
-        theta3=0
         #print(theta1,theta2,theta3)
         # T_0_1 (base_link to leg_front_l_1)
-        T_0_1 = self.translation(0.07500,0.0445, 0) @ self.rotation_x(1.57080) @ self.rotation_z(theta1)
-
+        theta1+=1.5647719192504883
+        theta2-=0.06371124267578127
+        theta3-=1.6913891220092774
+        T_0_1 = self.translation(0.09,0.05, 0)
         # T_1_2 (leg_front_l_1 to leg_front_l_2)
         ## TODO: Implement the transformation matrix from leg_front_l_1 to leg_front_l_2
-        T_1_2 = self.translation(0.05, 0, 0) 
-        print(T_1_2)
+        T_1_2 = self.rotation_y(theta1)@self.translation(0.00, 0.045, 0)
         # T_2_3 (leg_front_l_2 to leg_front_l_3)
         ## TODO: Implement the transformation matrix from leg_front_l_2 to leg_front_l_3
-        T_2_3 = self.translation(0, 0, -0.08)
-        print(T_2_3)
+        T_2_3 = self.rotation_z(-theta2)@self.translation(0.05, 0, -0.07)
         # T_3_ee (leg_front_l_3 to end-effector)
         ## TODO: Implement the transformation matrix from leg_front_l_3 to end effector
-        T_3_ee = self.translation(0, 0, -0.1)
+        T_3_ee = self.rotation_y(theta3)@self.translation(0.05, 0, -0.07)
         # TODO: Compute the final transformation. T_0_ee is the multiplication of the previous transformation matrices
-        T_0_ee =T_3_ee@T_2_3@T_1_2@T_0_1
-        print(T_0_ee)
+        T_0_ee = T_0_1@T_1_2@T_2_3@T_3_ee
         # TODO: Extract the end-effector position. The end effector position is a 3x1 vector (not in homogenous coordinates)
         end_effector_position = T_0_ee[:3,3]
-        #print(end_effector_position)
-
         return end_effector_position
 
     # FK for back left leg
     def forward_kinematics_b(self, theta1, theta2, theta3):
 
-        ## TODO: Implement the FK for the back left leg, similar to forward_kinematics_f
-        end_effector_position = np.array([0,0,0])
-
+        ## TODO: Implement the FK for the back left leg, similar to forward_kinematics_f-1.5594313430786133 -0.05454627990722655 1.6597261810302735
+        theta1+=1.5594313430786133
+        theta2+=0.05454627990722655
+        theta3-=1.6597261810302735
+        T_0_1 = self.translation(-0.05,0.05, 0)
+        # T_1_2 (leg_front_l_1 to leg_front_l_2)
+        ## TODO: Implement the transformation matrix from leg_front_l_1 to leg_front_l_2
+        T_1_2 = self.rotation_y(theta1)@self.translation(0.00, 0.045, 0)
+        # T_2_3 (leg_front_l_2 to leg_front_l_3)
+        ## TODO: Implement the transformation matrix from leg_front_l_2 to leg_front_l_3
+        T_2_3 = self.rotation_z(-theta2)@self.translation(0.05, 0, -0.07)
+        # T_3_ee (leg_front_l_3 to end-effector)
+        ## TODO: Implement the transformation matrix from leg_front_l_3 to end effector
+        T_3_ee = self.rotation_y(theta3)@self.translation(0.05, 0, -0.07)
+        # TODO: Compute the final transformation. T_0_ee is the multiplication of the previous transformation matrices
+        T_0_ee = T_0_1@T_1_2@T_2_3@T_3_ee
+        # TODO: Extract the end-effector position. The end effector position is a 3x1 vector (not in homogenous coordinates)
+        end_effector_position = T_0_ee[:3,3]
+        print(T_0_1,T_1_2,T_2_3,T_3_ee)
         return end_effector_position
+
 
 
     def timer_callback(self):
