@@ -109,7 +109,7 @@ class ForwardKinematics(Node):
         T_0_ee = T_0_1@T_1_2@T_2_3@T_3_ee
         # TODO: Extract the end-effector position. The end effector position is a 3x1 vector (not in homogenous coordinates)
         end_effector_position = T_0_ee[:3,3]
-        print(theta1,theta2,theta3)
+        #print(theta1,theta2,theta3)
         return end_effector_position
 
     # FK for back left leg
