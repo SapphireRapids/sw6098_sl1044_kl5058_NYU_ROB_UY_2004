@@ -92,9 +92,9 @@ class ForwardKinematics(Node):
     def forward_kinematics_f(self, theta1, theta2, theta3):
         #print(theta1,theta2,theta3)
         # T_0_1 (base_link to leg_front_l_1)
-        theta1+=1.5647719192504883
-        theta2-=0.06371124267578127
-        theta3-=1.6913891220092774
+        theta1+=1.6132185745239258
+        theta2-=0.4230517578125
+        theta3-=1.6616325759887696
         T_0_1 = self.translation(0.09,0.05, 0)
         # T_1_2 (leg_front_l_1 to leg_front_l_2)
         ## TODO: Implement the transformation matrix from leg_front_l_1 to leg_front_l_2
@@ -109,15 +109,16 @@ class ForwardKinematics(Node):
         T_0_ee = T_0_1@T_1_2@T_2_3@T_3_ee
         # TODO: Extract the end-effector position. The end effector position is a 3x1 vector (not in homogenous coordinates)
         end_effector_position = T_0_ee[:3,3]
+        print(theta1,theta2,theta3)
         return end_effector_position
 
     # FK for back left leg
     def forward_kinematics_b(self, theta1, theta2, theta3):
 
         ## TODO: Implement the FK for the back left leg, similar to forward_kinematics_f-1.5594313430786133 -0.05454627990722655 1.6597261810302735
-        theta1+=1.5594313430786133
-        theta2+=0.05454627990722655
-        theta3-=1.6597261810302735
+        theta1+=1.5640089797973635
+        theta2+=-0.017170982360839915
+        theta3-=1.7230511093139649
         T_0_1 = self.translation(-0.05,0.05, 0)
         # T_1_2 (leg_front_l_1 to leg_front_l_2)
         ## TODO: Implement the transformation matrix from leg_front_l_1 to leg_front_l_2
@@ -132,7 +133,7 @@ class ForwardKinematics(Node):
         T_0_ee = T_0_1@T_1_2@T_2_3@T_3_ee
         # TODO: Extract the end-effector position. The end effector position is a 3x1 vector (not in homogenous coordinates)
         end_effector_position = T_0_ee[:3,3]
-        print(T_0_1,T_1_2,T_2_3,T_3_ee)
+        #print(theta1,theta2,theta3)
         return end_effector_position
 
 
@@ -169,7 +170,12 @@ class ForwardKinematics(Node):
             marker.pose.position.y = end_effector_position_f[1]
             marker.pose.position.z = end_effector_position_f[2]
             self.marker_publisher.publish(marker)
-
+            dx=end_effector_position_f[0]-end_effector_position_b[0]
+            dy=end_effector_position_f[1]-end_effector_position_b[1]
+            dz=end_effector_position_f[2]-end_effector_position_b[2]
+            dist=(dx*dx+dy*dy+dz*dz)**0.5
+            if dist<0.05:
+                playing = sound.play()
             position = Float64MultiArray()
             position.data = end_effector_position_f
             self.position_publisher.publish(position)
